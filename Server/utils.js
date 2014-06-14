@@ -1,5 +1,5 @@
+var CryptoJS = require("cryptojs").Crypto;
 var utils = {};
-
 
 utils.randomString = function randomString (length) {
 	var chars = "abcdefghijklmnopqrstuvwxyz0123456789",
@@ -30,13 +30,13 @@ utils.removeSubDomains = function removeSubDomains (domain) {
 	return domain.join(".");
 };
 
-utils.addReview = function addReview (database, form, userId, callback) {
+utils.addReview = function addReview (database, form, userId, callback, loggedIn) {
 	if (typeof userId === "function") {
 		callback = userId;
 		userId = null;
 	}
-	var query = "INSERT INTO reviews (userId, reviewedDomain, reviewedTime, shortDescription, longDescription) VALUES (?, ?, NOW(), ?, ?)";
-	database.query(query, [userId, form.reviewedDomain, form.shortDescription, form.longDescription], function (err, results) {
+	var query = "INSERT INTO reviews (userId, postedWhileLoggedIn, reviewedDomain, reviewedTime, shortDescription, longDescription) VALUES (?, ?, ?, NOW(), ?, ?)";
+	database.query(query, [userId, loggedIn, form.reviewedDomain, form.shortDescription, form.longDescription], function (err, results) {
 		console.log("A review has been added.", userId, form.reviewedDomain, form.shortDescription, form.longDescription);
 		callback(err, results);
 	});
@@ -75,9 +75,49 @@ utils.getReviewFromId = function getReviewFromId (database, id, callback) {
 	database.query("SELECT reviewId, modVerified, agreeVotes, reviewedDomain, reviewedTime, shortDescription, longDescription FROM reviews WHERE reviewId = ? AND visible = 1", [id], callback);
 };
 
-
 utils.newAccount = function newAccount (database, email, password, callback) {
-	
+	database.query("SELECT userId FROM users WHERE email = ?", [email], function (err, rows, fields) {
+		if (err) {
+			callback(err);
+			return;
+		}
+		if (rows.length > 0) {
+			callback(err, rows[0].userId);
+			return;
+		}
+		database.query("INSERT INTO users (password, email) VALUES (?, ?)", [CryptoJS.SHA256(password).toString(CryptoJS.charenc.Hex), email], function (err, result) {
+			result = result || {};
+			console.log("New account created. Email: " + email);
+			callback(err, result.insertId);
+		});
+	});
+};
+
+utils.loginAccount = function loginAccount (database, req, res) {
+	database.query("SELECT userId, moderator FROM users WHERE email = ? AND password = ?", [req.body.email, CryptoJS.SHA256(req.body.password).toString(CryptoJS.charenc.Hex)], function (err, rows, fields) {
+		if (err) {
+			console.log("DATABASE ERROR while trying to login", err);
+			res.end('{"error": "A database error occured."}');
+			return;
+		}
+		if (rows.length < 1) {
+			database.query("SELECT userId FROM users WHERE email = ?", [req.body.email], function (err, rows, fields) {
+				if (rows.length > 0) {
+					console.log("Someone tried logging into " + req.body.email + " with a wrong password.");
+					res.end('{"error": "This email is not registered or a wrong password was used."}');
+					return;
+				} else {
+					utils.newAccount(database, req.body.email, req.body.password, function () {
+						utils.loginAccount(database, req, res);
+					});
+				}
+			});
+		} else {
+			req.session.userId = rows[0].userId;
+			rows[0].email = req.body.email;
+			res.end(JSON.stringify(rows[0]));
+		}
+	});
 };
 
 module.exports = utils;

@@ -14,15 +14,17 @@
 				<a href="http://www.test.com"><div class="topbarlink pluginlink">Download our chrome plugin!</div></a>
 				<a href="index.html"><div class="topbarlink">Search Reviews</div></a>
 			</div>
-			<form action="http://reviews.squarific.com/login" class="centeredcontainer" method="POST">
+			<div class="centeredcontainer">
+				<div id="messageTarget"></div>
 				<h3 class="small_title">Login or register</h3>
 				<div class="formboxAddReview">
-					<span class="label labelAddReview">Email<span id="helptext_email" class="helptext"> (?)</span></span><input name="email" type="email" class="textfieldAddReview"/><br/>
-					<span class="label labelAddReview">Password<span id="helptext_password" class="helptext"> (?)</span></span><input name="password" type="password" class="textfieldAddReview"/><br/>
+					<span class="label labelAddReview">Email<span id="helptext_email" class="helptext"> (?)</span></span><input id="emailInput" name="email" type="email" class="textfieldAddReview"/><br/>
+					<span class="label labelAddReview">Password<span id="helptext_password" class="helptext"> (?)</span></span><input id="passwordInput" name="password" type="password" class="textfieldAddReview"/><br/>
 				</div>
-				<button type="submit" class="button reviewbutton addreviewbutton">Login or register</button>
-			</form>
+				<div id="loginButton" class="button reviewbutton addreviewbutton">Login or register</button>
+			</div>
 		</div>
-		<script src="scripts/message.js"></script>
+		<script src="scripts/WebReviewPlugin.js"></script>
+		<script src="scripts/login.js"></script>
 	</body>
 </html>

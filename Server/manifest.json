@@ -5,6 +5,6 @@
         "express": "4.x",
         "mysql": "*",
         "body-parser": "*",
-        "crypto-js": "*"
+        "cryptojs": "*"
     }
 }

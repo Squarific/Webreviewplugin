@@ -10,7 +10,7 @@
 		<a href="browser_action_popup.html"><div class="newtabbutton returnbutton">Return to main page</div></a>
 		<div class="topbar">
 			<a href="http://www.test.com"><div class="topbarlink pluginlink">Download our chrome plugin!</div></a>
-			<a href="index.html"><div class="topbarlink">WebReviewPlugin</div></a>
+			<a href="index.html"><div class="topbarlink">Search reviews</div></a>
 		</div>
 		<form action="http://reviews.squarific.com/addreview" class="centeredcontainer addreviewcontainer" method="POST">
 			<div id="statusmessage"></div>
@@ -25,8 +25,8 @@
 			<button type="submit" class="button reviewbutton addreviewbutton">Upload review</button>
 			<h3 class="small_title">Optional</h3>
 			<div class="formboxAddReview">
-				<span class="label labelAddReview">Email<span id="helptext_email" class="helptext"> (?)</span></span><input name="email" type="email" class="textfieldAddReview"/><br/>
-				<span class="label labelAddReview">Show email<span id="helptext_showemail" class="helptext"> (?)</span></span><input type="checkbox" class="checkboxAddReview"/>
+				<span class="label labelAddReview">Email<span id="helptext_email" class="helptext"> (?)</span></span><input id="emailInput" name="email" type="email" class="textfieldAddReview"/><br/>
+				<div style="display:none;"><span class="label labelAddReview">Show email<span id="helptext_showemail" class="helptext"> (?)</span></span><input type="checkbox" class="checkboxAddReview"/></div>
 			</div>
 		</form>
 		<script src="scripts/add_review.js"></script>

@@ -19,9 +19,11 @@ chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 	document.getElementById("domain_input").value = domain;
 });
 
-document.getElementById("shortdesctextarea").addEventListener("change", updateCount);
-document.getElementById("shortdesctextarea").addEventListener("keydown", updateCount);
-document.getElementById("shortdesctextarea").focus();
+var shortDesc = document.getElementById("shortdesctextarea")
+shortDesc.addEventListener("change", updateCount);
+shortDesc.addEventListener("keydown", updateCount);
+shortDesc.focus();
+document.getElementById("emailInput").value = localStorage.email;
 
 function updateCount () {
 	document.getElementById("short_desc_lettercount").innerText = this.value.length + "/255";
@@ -35,6 +37,7 @@ if (urlParams.success === 2) {
 } else if (urlParams.success === 1) {
 	msg.className = "success";
 	msg.innerText = "The review has been successfully added and a new account has been created.";
+	localStorage.email = urlParams.email;
 } else if (urlParams.error) {
 	msg.className = "error";
 	msg.innerText = "An error occured while trying to add the review, please try again in a few hours.";

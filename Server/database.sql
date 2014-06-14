@@ -21,13 +21,13 @@ CREATE TABLE IF NOT EXISTS statusses (
 CREATE TABLE IF NOT EXISTS emailSecrets (
 	secretId BIGINT AUTO_INCREMENT,
 	userId BIGINT,
-	secret VARCHAR(12)
+	secret VARCHAR(12),
+	PRIMARY KEY (secretID)
 );
 
 CREATE TABLE IF NOT EXISTS users (
 	userId BIGINT AUTO_INCREMENT,
-	username VARCHAR(255),
-	password VARCHAR(255),
+	password VARCHAR(64),
 	email VARCHAR(255),
 	email_confirmed TINYINT(1),
 	moderator TINYINT(1),
@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS reviews (
 	reviewId BIGINT AUTO_INCREMENT,
 	userId BIGINT,
+	postedWhileLoggedIn TINYINT(1),
 	modMade TINYINT(1),
 	modVerified TINYINT(1),
 	domainContacted TINYINT(1),

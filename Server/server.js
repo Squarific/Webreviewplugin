@@ -1,7 +1,6 @@
 var mysql = require("mysql");
 var express = require("express");
 var bodyParser = require("body-parser");
-var hash = require("crypto-js/sha256");
 var app = express();
 var session = require('cookie-session');
 var utils = require("./utils.js");
@@ -22,7 +21,7 @@ app.get("/review/:reviewid", function (req, res) {
 	utils.getReviewFromId(database, req.params.reviewid, function (err, review) {
 		if (err) {
 			console.log("DATABASE ERROR (while retrieving revew from id)", err);
-			res.end('{error: "An error occured while trying to load the review."}');
+			res.end('{"error": "An error occured while trying to load the review."}');
 			return;
 		}
 		res.header("Access-Control-Allow-Origin", "*");
@@ -35,7 +34,7 @@ app.get("/domain/:domain", function (req, res) {
 	utils.getReviewsFromDomain(database, req.params.domain, function (err, reviews) {
 		if (err) {
 			console.log("DATABASE ERROR (while retrieving reviews from domain)", err);
-			res.end('{error: "An error occured while trying to load the reviews"}');
+			res.end('{"error": "An error occured while trying to load the reviews"}');
 			return;
 		}
 		res.header("Access-Control-Allow-Origin", "*");
@@ -45,7 +44,7 @@ app.get("/domain/:domain", function (req, res) {
 });
 
 app.post("/addreview", function (req, res) {
-	if (req.body.email) {
+	if (req.body.email && !req.session.userId) {
 		database.query("SELECT userId FROM users WHERE email = " + database.escape(req.body.email), function (err, rows, fields) {
 			if (err) {
 				console.log("DATABASE ERROR (when selecting userId in addReview): " + err);
@@ -53,14 +52,14 @@ app.post("/addreview", function (req, res) {
 				return;
 			}
 			if (rows.length < 1) {
-				utils.newAccount(database, req.body.email, null, function (err, id) {
+				utils.newAccount(database, req.body.email, function (err, id) {
 					utils.addReview(database, req.body, id, function (err) {
 						if (err) {
 							console.log("DATABASE ERROR (when adding review without userId with email) in addReview): " + err);
 							res.redirect(303, 'http://www.squarific.com/WebReviewPlugin/add_review.html?error=1');
 							return;
 						}
-						res.redirect(303, 'http://www.squarific.com/WebReviewPlugin/add_review.html?success=2');
+						res.redirect(303, 'http://www.squarific.com/WebReviewPlugin/add_review.html?success=2&email=' + encodeURIComponent(req.body.email));
 					});
 				});
 			} else {
@@ -74,7 +73,16 @@ app.post("/addreview", function (req, res) {
 				});
 			}
 		});
-	} else {
+	} else if (req.session.userId) {
+		utils.addReview(database, req.body, req.session.userId, function (err) {
+			if (err) {
+				console.log("DATABASE ERROR (when adding review with session userId) in addReview): " + err);
+				res.redirect(303, 'http://www.squarific.com/WebReviewPlugin/add_review.html?error=1');
+				return;
+			}
+			res.redirect(303, 'http://www.squarific.com/WebReviewPlugin/add_review.html?success=1');
+		}, true);
+	}else {
 		utils.addReview(database, req.body, function (err) {
 			if (err) {
 				console.log("DATABASE ERROR (when adding review without userId) in addReview): " + err);
@@ -90,7 +98,7 @@ app.get("/search/:query", function (req, res) {
 	utils.searchReviews(database, req.params.query, function (err, reviews) {
 		if (err) {
 			console.log("DATABASE ERROR (while searching for reviews)", err);
-			res.end('{error: "An error occured while trying to load the reviews"}');
+			res.end('{"error": "An error occured while trying to load the reviews"}');
 			return;
 		}
 		res.header("Access-Control-Allow-Origin", "*");
@@ -100,7 +108,9 @@ app.get("/search/:query", function (req, res) {
 });
 
 app.post("/login", function (req, res) {
-	res.redirect(303, "http://www.squarific.com/WebReviewPlugin/message.html?msg=loginsuccess");
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "X-Requested-With");
+	utils.loginAccount(database, req, res);
 });
 
 var server = app.listen(8080, function () {
