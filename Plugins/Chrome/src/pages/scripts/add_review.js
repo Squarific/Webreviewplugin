@@ -11,16 +11,6 @@ var urlParams;
        urlParams[decode(match[1])] = decode(match[2]);
 })();
 
-if (chrome && chrome.tabs && typeof chrome.tabs.query === "function" && !urlParams.domain) {
-	chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-		var domain = new URL(tabs[0].url).hostname;
-		if (domain.indexOf("www.") === 0) {
-			domain = domain.slice(4);
-		}
-		document.getElementById("domain_input").value = domain;
-	});
-}
-
 var shortDesc = document.getElementById("shortdesctextarea")
 shortDesc.addEventListener("change", updateCount);
 shortDesc.addEventListener("keydown", updateCount);
