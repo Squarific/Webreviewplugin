@@ -5,6 +5,7 @@
         "express": "4.x",
         "mysql": "*",
         "body-parser": "*",
+        "cookie-session": "*",
         "cryptojs": "*"
     }
 }

@@ -52,7 +52,7 @@ app.post("/addreview", function (req, res) {
 				return;
 			}
 			if (rows.length < 1) {
-				utils.newAccount(database, req.body.email, function (err, id) {
+				utils.newAccount(database, req.body.email, utils.randomString(5), function (err, id) {
 					utils.addReview(database, req.body, id, function (err) {
 						if (err) {
 							console.log("DATABASE ERROR (when adding review without userId with email) in addReview): " + err);
@@ -113,6 +113,6 @@ app.post("/login", function (req, res) {
 	utils.loginAccount(database, req, res);
 });
 
-var server = app.listen(8080, function () {
+var server = app.listen(80, function () {
 	console.log("Listening on port %d", server.address().port);
 });
