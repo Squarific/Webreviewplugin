@@ -44,11 +44,13 @@ app.get("/domain/:domain", function (req, res) {
 });
 
 app.post("/addreview", function (req, res) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "X-Requested-With");
 	if (req.body.email && !req.session.userId) {
 		database.query("SELECT userId FROM users WHERE email = " + database.escape(req.body.email), function (err, rows, fields) {
 			if (err) {
 				console.log("DATABASE ERROR (when selecting userId in addReview): " + err);
-				res.redirect(303, 'http://www.squarific.com/WebReviewPlugin/add_review.html?error=1');
+				res.end('{"error": "An error occured while posting the review, please try again later."}');
 				return;
 			}
 			if (rows.length < 1) {
@@ -56,20 +58,20 @@ app.post("/addreview", function (req, res) {
 					utils.addReview(database, req.body, id, function (err) {
 						if (err) {
 							console.log("DATABASE ERROR (when adding review without userId with email) in addReview): " + err);
-							res.redirect(303, 'http://www.squarific.com/WebReviewPlugin/add_review.html?error=1');
+							res.end('{"error": "An error occured while posting the review, please try again later."}');
 							return;
 						}
-						res.redirect(303, 'http://www.squarific.com/WebReviewPlugin/add_review.html?success=2&email=' + encodeURIComponent(req.body.email));
+						res.end('{"success": "Your review has been succesfully added and an account has been created.", "email": "' + req.body.email + '"}');
 					});
 				});
 			} else {
 				utils.addReview(database, req.body, rows[0].userId, function (err) {
 					if (err) {
 						console.log("DATABASE ERROR (when adding review with userId) in addReview): " + err);
-						res.redirect(303, 'http://www.squarific.com/WebReviewPlugin/add_review.html?error=1');
+						res.end('{"error": "An error occured while posting the review, please try again later."}');
 						return;
 					}
-					res.redirect(303, 'http://www.squarific.com/WebReviewPlugin/add_review.html?success=1');
+					res.end('{"success": "Your review has been succesfully added!"}');
 				});
 			}
 		});
@@ -77,19 +79,19 @@ app.post("/addreview", function (req, res) {
 		utils.addReview(database, req.body, req.session.userId, function (err) {
 			if (err) {
 				console.log("DATABASE ERROR (when adding review with session userId) in addReview): " + err);
-				res.redirect(303, 'http://www.squarific.com/WebReviewPlugin/add_review.html?error=1');
+				res.end('{"error": "An error occured while posting the review, please try again later."}');
 				return;
 			}
-			res.redirect(303, 'http://www.squarific.com/WebReviewPlugin/add_review.html?success=1');
+			res.end('{"success": "Your review has been succesfully added!"}');
 		}, true);
 	}else {
 		utils.addReview(database, req.body, function (err) {
 			if (err) {
 				console.log("DATABASE ERROR (when adding review without userId) in addReview): " + err);
-				res.redirect(303, 'http://www.squarific.com/WebReviewPlugin/add_review.html?error=1');
+				res.end('{"error": "An error occured while posting the review, please try again later."}');
 				return;
 			}
-			res.redirect(303, 'http://www.squarific.com/WebReviewPlugin/add_review.html?success=1');
+			res.end('{"success": "Your review has been succesfully added!"}');
 		});
 	}
 });

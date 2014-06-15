@@ -17,24 +17,41 @@ shortDesc.addEventListener("keydown", updateCount);
 shortDesc.focus();
 document.getElementById("emailInput").value = (localStorage.email) ? localStorage.email : "";
 
+document.getElementById("postReviewButton").addEventListener("click", function () {
+	if (this.disabled) return true;
+	this.classList.add("disabledButton");
+	this.disabled = true;
+	var button = this;
+	reviewPlugin.postReview({
+		email: document.getElementById("emailInput").value,
+		reviewedDomain: document.getElementById("domain_input").value,
+		shortDescription: document.getElementById("shortdesctextarea").value,
+		longDescription: document.getElementById("longdesctextarea").value,
+	}, function (response) {
+		response = JSON.parse(response);
+		var msg = document.getElementById("messageTarget");
+		if (response.error) {
+			msg.className = "error";
+			msg.innerText = response.error;
+		} else if (response.success) {
+			msg.className = "success";
+			msg.innerText = response.success;
+		} else {
+			msg.className = "error";
+			msg.innerText = "Unexpected response: " + response;
+			console.log(response);
+		}
+		button.disabled = false;
+		button.classList.remove("disabledButton")
+	});
+});
+
 function updateCount () {
 	document.getElementById("short_desc_lettercount").innerText = this.value.length + "/255";
 }
 
-
-var msg = document.getElementById("statusmessage");
-if (urlParams.success === "1") {
-	msg.className = "success";
-	msg.innerText = "The review has been successfully added!";
-} else if (urlParams.success === "2") {
-	msg.className = "success";
-	msg.innerText = "The review has been successfully added and a new account has been created.";
-	localStorage.email = urlParams.email;
-} else if (urlParams.error === "1") {
-	msg.className = "error";
-	msg.innerText = "An error occured while trying to add the review, please try again in a few hours.";
-}
-
 if (urlParams.domain) {
 	document.getElementById("domain_input").value = urlParams.domain;
+} else {
+	document.getElementById("domain_input").focus();
 }
