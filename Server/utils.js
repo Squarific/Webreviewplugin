@@ -54,13 +54,14 @@ utils.searchReviews = function searchReviews (database, query, callback) {
 	domain = this.removeSubDomains(query);
 	var mysqlQuery = "SELECT reviewId, modVerified, agreeVotes, reviewedDomain, reviewedTime, shortDescription FROM reviews WHERE ";
 	var firstClause = "reviewedDomain LIKE " + database.escape("%." + domain + ".%") + " OR reviewedDomain LIKE " + database.escape("%." + domain) + " OR reviewedDomain LIKE " + database.escape(domain + ".%") + " OR reviewedDomain = " + database.escape(domain);
-	database.query(mysqlQuery + firstClause, [query], function (err, firstReviews) {
+	var limit = " LIMIT 50"
+	database.query(mysqlQuery + firstClause + limit, [query], function (err, firstReviews) {
 		if (err) {
 			callback(err, firstReviews);
 			return;
 		}
 		secondClause = "shortDescription LIKE " + database.escape("%" + query + "%") + " AND NOT (" + firstClause + ")";
-		database.query(mysqlQuery + secondClause, [query], function (err, secondReviews) {
+		database.query(mysqlQuery + secondClause + limit, [query], function (err, secondReviews) {
 			if (firstReviews && typeof firstReviews.concat == "function") {
 				callback(err, firstReviews.concat(secondReviews));
 			} else {
