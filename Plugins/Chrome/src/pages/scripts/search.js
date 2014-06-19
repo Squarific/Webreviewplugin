@@ -23,6 +23,8 @@ document.getElementById("searchbutton").addEventListener("click", function () {
 	location.assign("search.html?q=" + document.getElementById("searchbar").value);
 });
 
+document.getElementById("querywebsite").innerText = urlParams.q || " this website";
+
 if (urlParams.q) {
 	document.getElementById("searchbar").value = urlParams.q;
 	reviewPlugin.search(urlParams.q, function (reviews) {
