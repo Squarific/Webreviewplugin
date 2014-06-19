@@ -13,15 +13,15 @@ html, body {
 
 section {
 	border-left:10px solid rgb(179, 188, 211);
-	padding-bottom:1px;
+	padding:5px;
 	padding-left:20px;
 	font-family:serif;
 	font-size:18px;
 	margin:20px;
+	background:rgba(174, 180, 192, 0.2);
 }
 
 ul {
-	list-style-type:lower-roman;
 	margin-bottom:0;
 }
 
@@ -42,6 +42,7 @@ h3 {
 	margin:auto;
 	margin-top:30px;
 	margin-bottom:30px;
+	word-wrap: break-word;
 	width:80%;
 	transition-duration:0.4s;
 }
@@ -419,4 +420,8 @@ h3 {
 .reviewitmessage a {
 	text-decoration:underline;
 	font-weight:bold;
+}
+
+.jsoncode {
+	font-family:monospace;
 }

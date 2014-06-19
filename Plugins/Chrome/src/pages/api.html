@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+	<head>
+		<title>WebReview Search Reviews</title>
+		<link rel="stylesheet" href="styles.css" />
+		<link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+		<link rel="shortcut icon" href="images/icons/browser_action_base_19.png?v=0.1"> 
+	</head>
+	<body class="searchbody">
+		<a href="#" target="_blank"><div class="newtabbutton">Open this page in a new tab</div></a>
+		<a href="browser_action_popup.html"><div class="newtabbutton returnbutton">Return to main page</div></a>
+		<div class="pagecontainer">
+			<div class="topbar">
+				<a id="pluginlink" href="https://chrome.google.com/webstore/detail/webreviewplugin/cbmhnnahdpmkelbfmaipfchkocgcgcbl"><div class="topbarlink pluginlink">Download our chrome plugin!</div></a>
+				<a href="index.html"><div class="topbarlink">Search reviews</div></a>
+				<a href="login.html"><div class="topbarlink loginlink">Login</div></a>
+				<a href="http://www.reddit.com/r/squarific"><div class="topbarlink loginlink">Community</div></a>
+				<a href="api.html"><div class="topbarlink loginlink">Api</div></a>
+			</div>
+			<div class="centeredcontainer" style="padding:10px;">
+				<h1>Api</h1>
+				<section>
+					<h3>What?</h3>
+					The webreview api allows you to interact with the server and create your own apps that use the review data.<br/>
+					You could make a plugin for other browsers or you could integrate our server in your website.
+				</section>
+				<section>
+					<h3>How does it work?</h3>
+					You send the http requests to http://reviews.squarific.com<br/>
+					<section>
+						<h4>Posting a review</h4>
+						You send a POST request to /addreview<br/>		
+						The following parameters can be used:
+						<ul>
+							<li>reviewedDomain</li>
+							<li>shortDescription</li>
+							<li>longDescription</li>
+							<li>email</li>
+						</ul><br/>
+						<section>
+							<h5>Example post data</h5>
+							reviewedDomain=www.example.com&shortDescription=Very%20good%20domain&longDescription=Longer%20Description&email=info@example.com
+						</section>
+						<section>
+							<h5>Response</h5>
+							In case of success the server will respond with a JSON string that looks like this:<br/>
+							<section class="jsoncode">
+								{<br/>
+								&nbsp; &nbsp; &nbsp; &nbsp; "sucess": "Human readable success message",<br/>
+								&nbsp; &nbsp; &nbsp; &nbsp; "email": "email@example.com"<br/>
+								}
+							</section>
+							The email will be the one of the review, in case an email was defined during the request it will be that if not set and the user was logged in then the email will be the one of the user. If the user was not logged in and no email was specified than the "email" property will not be set.<br/><br/>
+							If something went wrong the server will respond with something that looks like this:<br/>
+							<section class="jsoncode">
+								{"error": "Human readable error description"}
+							</section>
+						</section>
+					</section>
+					<section>
+						<h4>Searching reviews</h4>
+						You send the GET requests to /search/:query
+						<section>
+							<h5>Example requests</h5>
+							/search/domain.com<br/>
+							/search/subdomain.domain.com<br/>
+							/search/word<br/>
+							/search/exact%20phrase<br/>
+						</section>
+						<section>
+							<h5>Response</h5>
+							In case of success the server will respond with a JSON string that looks like this:<br/>
+							<section class="jsoncode">
+								[{<br/>
+								&nbsp; &nbsp; &nbsp; &nbsp; "reviewid": 5,<br/>
+								&nbsp; &nbsp; &nbsp; &nbsp; "domain": "domain.com",<br/>
+								&nbsp; &nbsp; &nbsp; &nbsp; "shortDescription": "A short string (255 chars)"<br/>
+								}, ... ]
+							</section>
+							If something went wrong the server will respond with something that looks like this:<br/>
+							<section class="jsoncode">
+								{"error": "Human readable error description"}
+							</section>
+						</section>
+						<h5>Special case: Searching by domain</h5>
+						If you want the domain from a specific domain you can send your request instead to /domain/:domain<br/>
+						Subdomains will then be ignored if you look for reviews from shop.domain.com then it includes reviews from domain.com and from subdomain.domain.com
+						<section>
+							<h5>Example requests</h5>
+							/domain/domain.com<br/>
+							/domain/http%3A%2F%2Fdomain.com<br/>
+							/domain/subdomain.domain.com<br/>
+						</section>
+						<section>
+							<h5>Response</h5>
+							See above.
+						</section>
+					</section>
+					<section>
+						<h4>Retrieving a specific review</h4>
+						You send the GET requests to /review/:reviewid
+						<section>
+							<h5>Example requests</h5>
+							/review/5<br/>
+							/review/6<br/>
+							...
+						</section>
+						<section>
+							<h5>Response</h5>
+							In case of success the server will respond with a JSON string that looks like this:<br/>
+							<section  class="jsoncode">
+								{<br/>
+								&nbsp; &nbsp; &nbsp; &nbsp; "reviewid": 5,<br/>
+								&nbsp; &nbsp; &nbsp; &nbsp; "domain": "domain.com",<br/>
+								&nbsp; &nbsp; &nbsp; &nbsp; "shortDescription": "A short string (255 chars)",<br/>
+								&nbsp; &nbsp; &nbsp; &nbsp; "longDescription": "A long string"<br/>
+								}
+							</section>
+							If something went wrong the server will respond with something that looks like this:<br/>
+							<section  class="jsoncode">
+								{"error": "Human readable error description"}
+							</section>
+						</section>
+					</section>
+				</section>
+				<section>
+					<h3>What are the limitations?</h3>
+					You are allowed to make an unlimited amount of requests at this moment and you may use all returned data however you deem fit.
+					Logging in users is allowed but discouraged.
+				</section>
+				Last changed: 19/06/2014 17:06 CEST
+			</div>
+		</div>
+		<script src="scripts/removePluginLink.js"></script>
+	</body>
+</html>
