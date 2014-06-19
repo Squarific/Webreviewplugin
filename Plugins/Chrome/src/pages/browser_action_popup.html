@@ -1,1 +1,39 @@
-<!doctype html><html>	<head>		<title>WebReview Chrome Plugin</title>		<link rel="stylesheet" href="styles.css" />		<link rel="shortcut icon" href="images/icons/browser_action_base_19.png?v=0.1"> 	</head>	<body>		<div class="pagestatuscontainer">			<span class="pagestatuslabel">Status of <span id="pagestatusdomain">$website</span></span>		</div>		<h3 id="message">Loading reviews ...</h3>		<div id="modreviews" class="smallreviewlist">			<h3 class="remove">Approved Reviews</h3>			<div class="smallreview remove">				<span class="reviewlabel label">Date: </span><span>$datetime</span><br/>				<span class="reviewlabel label">Domain: </span><span>$domain</span><br/>				<span class="reviewlabel label">Desc: </span><span class="text shorttext">$shortdescription</span>				<div class="moreinfobutton button">More about this review</div>			</div>		</div>		<div id="communityreviews" class="smallreviewlist">			<h3 class="remove">Community Reviews</h3>			<div class="smallreview remove">				<span class="reviewlabel label">Date: </span><span>$datetime</span><br/>				<span class="reviewlabel label">Domain: </span><span>$domain</span><br/>				<span class="reviewlabel label">Votes: </span><span>$votes</span><br/>				<span class="reviewlabel label">Desc: </span><span class="text shorttext">$shortdescription</span>				<div class="moreinfobutton button">More about this review</div>			</div>		</div>		<a href="index.html"><div class="button">Search for reviews</div></a>		<a id="addreviewlink" href="add_review.html" target="_blank"><div class="button reviewbutton">Review this website</div></a>		<a href="login.html"><div class="button">Login / Register</div></a>		<script src="scripts/markdown.min.js"></script>		<script src="scripts/WebReviewPlugin.js"></script>		<script src="scripts/browser_action_popup.js"></script>	</body></html>
+<!doctype html>
+<html>
+	<head>
+		<title>WebReview Chrome Plugin</title>
+		<link rel="stylesheet" href="styles.css" />
+		<link rel="shortcut icon" href="images/icons/browser_action_base_19.png?v=0.1"> 
+	</head>
+	<body>
+		<div class="pagestatuscontainer">
+			<span class="pagestatuslabel">Status of <span id="pagestatusdomain">$website</span></span>
+		</div>
+		<h3 id="message">Loading reviews ...</h3>
+		<div id="modreviews" class="smallreviewlist">
+			<h3 class="remove">Approved Reviews</h3>
+			<div class="smallreview remove">
+				<span class="reviewlabel label">Date: </span><span>$datetime</span><br/>
+				<span class="reviewlabel label">Domain: </span><span>$domain</span><br/>
+				<span class="reviewlabel label">Desc: </span><span class="text shorttext">$shortdescription</span>
+				<div class="moreinfobutton button">More about this review</div>
+			</div>
+		</div>
+		<div id="communityreviews" class="smallreviewlist">
+			<h3 class="remove">Community Reviews</h3>
+			<div class="smallreview remove">
+				<span class="reviewlabel label">Date: </span><span>$datetime</span><br/>
+				<span class="reviewlabel label">Domain: </span><span>$domain</span><br/>
+				<span class="reviewlabel label">Votes: </span><span>$votes</span><br/>
+				<span class="reviewlabel label">Desc: </span><span class="text shorttext">$shortdescription</span>
+				<div class="moreinfobutton button">More about this review</div>
+			</div>
+		</div>
+		<a href="index.html"><div class="button">Search for reviews</div></a>
+		<a id="addreviewlink" href="add_review.html" target="_blank"><div class="button reviewbutton">Review this website</div></a>
+		<a href="login.html"><div class="button">Login / Register</div></a>
+		<script src="scripts/markdown.min.js"></script>
+		<script src="scripts/WebReviewPlugin.js"></script>
+		<script src="scripts/browser_action_popup.js"></script>
+	</body>
+</html>
