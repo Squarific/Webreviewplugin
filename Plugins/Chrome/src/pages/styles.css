@@ -7,11 +7,30 @@ html, body {
 	color:rgb(216, 230, 214);
 	min-width:500px;
 	overflow-x:hidden;
+	font-family:serif;
 	-webkit-animation: resize 0.1s; /* In chrome there is a bug that for some reason doesn't always draw the scrollbar, resizing helps.*/
 }
 
+section {
+	border-left:10px solid rgb(179, 188, 211);
+	padding-bottom:1px;
+	padding-left:20px;
+	font-family:serif;
+	font-size:18px;
+	margin:20px;
+}
+
+ul {
+	list-style-type:lower-roman;
+	margin-bottom:0;
+}
+
 h1 {
-	font-family:orbitron, sans-serif;
+	font-family:"Montserrat", sans-serif;
+}
+
+h3 {
+	font-family:"Montserrat", sans-serif;
 }
 
 .addreviewcontainer {
@@ -80,7 +99,7 @@ h1 {
 	padding-left:3%;
 	padding-right:3%;
 	font-weight:700;
-	font-family:orbitron, sans-serif;
+	font-family:"Montserrat", sans-serif;
 	font-size:20px;
 	transition-duration:0.1s;
 }
@@ -235,45 +254,12 @@ h3 {
 	padding:8px;
 }
 
-.question {
-	background:rgb(43, 76, 87);
-	padding:10px;
-	font-size:1.2rem;
-	font-weight:800;
-}
-
-.answer {
-	background:rgb(70, 109, 107);
-	padding:10px;
-	font-family:sans-serif;
-	text-shadow:none;
-	text-align:justify;
-}
-
 .label {
 	display:inline-block;
 	font-weight:800;
 	font-size:1.1rem;
 	color:white;
 	text-shadow: 1px 1px 1px #000;
-}
-
-.questioncontainer {
-	max-width:600px;
-	display:inline-block;
-	vertical-align:top;
-}
-
-@media (min-width: 1220px) {
-	.questioncontainer {
-		margin-top:60px;
-	}
-	.answer {
-		min-height:200px;
-	}
-	.question {
-		min-height:45px;
-	}
 }
 
 @media (min-width: 620px) {
@@ -379,7 +365,7 @@ h3 {
 	padding:5px;
 	padding-left:0px;
 	padding-right:10px;
-	font-family:sans-serif;
+	font-family:"Montserrat", sans-serif;
 	text-shadow:none;
 }
 
