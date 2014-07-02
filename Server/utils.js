@@ -30,6 +30,26 @@ utils.removeSubDomains = function removeSubDomains (domain) {
 	return domain.join(".");
 };
 
+utils.moderateReview = function moderateReview (database, userId, params, callback) {
+	var allowedKeys = ["modMade", "modVerified", "visible", "domainContacted", "contested", "reviewIcon", "statusType", "agreeVotes", "assignedMod", "reviewedDomain", "reviewedTime", "shortDescription", "longDescription"];
+	if (allowedKeys.indexOf(params.key) === -1) {
+		callback("KEYNOTALLOWED");
+		return;
+	}
+	database.query("SELECT moderator FROM users WHERE userId = ?", [userId], function (err, rows) {
+		if (err) {
+			console.log("MYSQL ERROR WHILE checking for moderator in getreviewfromid");
+			callback(err);
+			return;
+		}
+		if (rows.length > 0 && rows[0].moderator) {
+			database.query("UPDATE reviews SET ?? = ? WHERE reviewId = ?", [params.key, params.value, params.reviewId], callback);
+		} else {
+			callback("NOTALLOWED");
+		}
+	});
+};
+
 utils.addReview = function addReview (database, form, userId, callback, loggedIn) {
 	if (typeof userId === "function") {
 		callback = userId;
@@ -72,8 +92,23 @@ utils.searchReviews = function searchReviews (database, query, callback) {
 	});
 };
 
-utils.getReviewFromId = function getReviewFromId (database, id, callback) {
-	database.query("SELECT reviewId, modVerified, agreeVotes, reviewedDomain, reviewedTime, shortDescription, longDescription FROM reviews WHERE reviewId = ? AND visible = 1", [id], callback);
+utils.getReviewFromId = function getReviewFromId (database, id, userId, callback) {
+	if (userId) {
+		database.query("SELECT moderator FROM users WHERE userId = ?", [userId], function (err, rows) {
+			if (err) {
+				console.log("MYSQL ERROR WHILE checking for moderator in getreviewfromid");
+				callback(err);
+				return;
+			}
+			if (rows.length > 0 && rows[0].moderator) {
+				database.query("SELECT reviewId, modVerified, agreeVotes, reviewedDomain, reviewedTime, shortDescription, longDescription FROM reviews WHERE reviewId = ?", [id], callback);
+			} else {
+				database.query("SELECT reviewId, modVerified, agreeVotes, reviewedDomain, reviewedTime, shortDescription, longDescription FROM reviews WHERE reviewId = ? AND visible = 1", [id], callback);
+			}
+		});
+	} else {
+		database.query("SELECT reviewId, modVerified, agreeVotes, reviewedDomain, reviewedTime, shortDescription, longDescription FROM reviews WHERE reviewId = ? AND visible = 1", [id], callback);
+	}
 };
 
 utils.newAccount = function newAccount (database, email, password, callback) {
@@ -115,6 +150,7 @@ utils.loginAccount = function loginAccount (database, req, res) {
 			});
 		} else {
 			req.session.userId = rows[0].userId;
+			console.log(req.session.userId);
 			rows[0].email = req.body.email;
 			res.end(JSON.stringify(rows[0]));
 		}

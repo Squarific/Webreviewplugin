@@ -11,9 +11,27 @@ var urlParams;
        urlParams[decode(match[1])] = decode(match[2]);
 })();
 
-reviewPlugin.getReview(urlParams.id, function (review) {
+if (urlParams.delete) {
+	reviewPlugin.moderateReview(urlParams.delete, "visible", "0", function (response) {
+		var msg = document.getElementById("message");
+		msg.style.display = "none";
+		if (response.error) {
+			msg.style.display = "inline-block";
+			msg.innerText = response.error;
+		} else if (response.success) {
+			msg.style.display = "inline-block";
+			msg.innerText = response.success;
+		} else {
+			console.log("Unexpected response " + response, response);
+		}
+	});
+}
+
+reviewPlugin.getReview(urlParams.id || urlParams.delete, function (review) {
 	var msg = document.getElementById("message");
-	msg.style.display = "none";
+	if (!urlParams.delete) {
+		msg.style.display = "none";
+	}
 	if (review.error) {
 		msg.style.display = "inline-block";
 		msg.innerText = review.error;

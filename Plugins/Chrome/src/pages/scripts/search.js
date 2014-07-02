@@ -51,7 +51,8 @@ function updateSearch () {
 	setUrlParams();
 	if (urlParams.q) {
 		var searchcontainer = document.getElementById("searchcontainer");
-		document.getElementById("querywebsite").innerText = urlParams.q || " this website";
+		document.getElementById("querywebsite").innerText = urlParams.q;
+		document.getElementById("addreviewlink").href = "add_review.html?domain=" + urlParams.q;
 		document.getElementById("reviewsContainer").classList.remove("hidden");
 		document.getElementById("searchbutton").classList.add("hidden");
 		document.getElementById("searchbutton2").classList.remove("hidden");

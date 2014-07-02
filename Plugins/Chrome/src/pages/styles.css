@@ -5,7 +5,6 @@ html, body {
 	background:rgb(52, 63, 70);
 	background-image:url(images/noise.png);
 	color:rgb(216, 230, 214);
-	min-width:500px;
 	overflow-x:hidden;
 	font-family:serif;
 	-webkit-animation: resize 0.1s; /* In chrome there is a bug that for some reason doesn't always draw the scrollbar, resizing helps.*/
@@ -62,6 +61,7 @@ h3 {
 	width:70%;
 	font-size:20px;
 	margin-bottom:10%;
+	transition-duration:1.5s;
 }
 
 .searchtopbarcontainer {
@@ -77,6 +77,7 @@ h3 {
 	font-size:20px;
 	box-sizing:border-box;
 	margin-bottom:20px;
+	margin-top:-40px;
 }
 
 .topbar {
@@ -95,8 +96,8 @@ h3 {
 .topbarlink {
 	display:inline-block;
 	padding:10px;
-	padding-left:3%;
-	padding-right:3%;
+	padding-left:1.3%;
+	padding-right:1.3%;
 	font-weight:700;
 	font-family:"Montserrat", sans-serif;
 	font-size:20px;
@@ -114,6 +115,10 @@ h3 {
 
 .pluginlink:hover {
 	background:rgb(114, 139, 151);
+}
+
+.pluginlinksmall {
+	display:none;
 }
 
 .loginlink:hover {
@@ -261,14 +266,14 @@ h3 {
 	text-shadow: 1px 1px 1px #000;
 }
 
-@media (min-width: 620px) {
+@media (min-width: 621px) {
 	.newtabbutton {
 		display:none;
 	}
 }
 
-@media (max-width: 620px) {
-	.topbar {
+@media (max-width: 621px) {
+	.removeOnPluginSmallScreen {
 		display:none;
 	}
 }
@@ -285,9 +290,43 @@ h3 {
 	}
 }
 
-@media (max-width: 842px) {
+@media (max-width: 1175px) {
 	.pluginlink {
 		display:none;
+	}
+	
+	.pluginlinksmall {
+		display:inline-block;
+	}
+}
+
+@media (max-width: 980px) {
+	.pluginlink {
+		display:none;
+	}
+}
+
+@media (max-width: 785px) {
+	.topbarlink {
+		padding:10px;
+		padding-left:0.5%;
+		padding-right:0.5%;
+	}
+}
+
+@media (max-width: 680px) {
+	.topbarlink {
+		width:100%;
+		padding:10px;
+		padding-left:10%;
+	}
+	.searchtopbarcontainer .button {
+		box-sizing:border-box;
+		float:none;
+		width:100%;
+	}
+	.searchtopbarcontainer input {
+		width:100%;
 	}
 }
 
@@ -430,4 +469,13 @@ h3 {
 
 .searchbarcontainer a {
 	color:rgb(216, 230, 214);
+}
+
+.removebutton {
+	background:rgb(163, 63, 31);
+	color:rgb(255, 230, 152);
+}
+
+.removebutton:hover {
+	background:rgb(173, 84, 55);
 }

@@ -2,7 +2,6 @@ var mysql = require("mysql");
 var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
-var session = require('cookie-session');
 var utils = require("./utils.js");
 var database = mysql.createConnection({
 	host: "localhost",
@@ -11,14 +10,33 @@ var database = mysql.createConnection({
 	database: "WebReviewPlugin"
 });
 
-app.use(session({
-	keys: ["6qzFQSDjqsd54dZEzjlke4686z", "sds25sdfSDF46vqR75fq5gDeSD4dsS", "hlfqsd4qkjgq246575sdQS57465DFLKJQSDdf54", "qsdfjkD65QSFL65KJQSDF5dq54"]
-}));
-
 app.use(bodyParser())
 
+app.get("/moderatereview/:reviewId/:key/:value", function (req, res) {
+	utils.moderateReview(database, req.session.userId, req.params, function (err) {
+		if (err === "KEYNOTALLOWED") {
+			console.log("Someone tried moderating a review with a bad key", req.params);
+			res.end('{"error": "The provided key isn\t allowed to be changed."}');
+			return;
+		}
+		if (err === "NOTALLOWED") {
+			console.log("Someone tried moderating a review while not logged in", req.params);
+			res.end('{"error": "You aren\'t logged in or lack the necessary rights to moderate reviews."}');
+			return;
+		}
+		if (err) {
+			console.log();
+			res.end('{"error": "An error occured while trying to moderate the review."}');
+			return;
+		}
+		res.end('{"success": "Succesfully moderated review."}');
+	});
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "X-Requested-With");
+});
+
 app.get("/review/:reviewid", function (req, res) {
-	utils.getReviewFromId(database, req.params.reviewid, function (err, review) {
+	utils.getReviewFromId(database, req.params.reviewid, req.session.userId, function (err, review) {
 		if (err) {
 			console.log("DATABASE ERROR (while retrieving revew from id)", err);
 			res.end('{"error": "An error occured while trying to load the review."}');
@@ -115,6 +133,6 @@ app.post("/login", function (req, res) {
 	utils.loginAccount(database, req, res);
 });
 
-var server = app.listen(80, function () {
+var server = app.listen(8080, function () {
 	console.log("Listening on port %d", server.address().port);
 });

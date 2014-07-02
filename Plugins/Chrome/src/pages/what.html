@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>WebReview Response</title>
+		<title>WebReview Search Reviews</title>
 		<link rel="stylesheet" href="styles.css" />
 		<link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 		<link rel="shortcut icon" href="images/icons/browser_action_base_19.png?v=0.1"> 
@@ -20,18 +20,14 @@
 				<a href="add_review.html"><div class="topbarlink loginlink">Add review</div></a>
 				<a href="what.html"><div class="topbarlink loginlink">What is this?</div></a>
 			</div>
-			<div class="centeredcontainer">
-				<div id="messageTarget"></div>
-				<h3 class="small_title">Login or register</h3>
-				<div class="formboxAddReview">
-					<span class="label labelAddReview">Email<span id="helptext_email" class="helptext"> (?)</span></span><input id="emailInput" name="email" type="email" class="textfieldAddReview"/><br/>
-					<span class="label labelAddReview">Password<span id="helptext_password" class="helptext"> (?)</span></span><input id="passwordInput" name="password" type="password" class="textfieldAddReview"/><br/>
-				</div>
-				<div id="loginButton" class="button reviewbutton addreviewbutton">Login or register</button>
+			<div class="centeredcontainer" style="padding:10px;">
+				<h1>What is webreview?</h1>
+				<section>
+					Webreview is a service that allows you to search for website reviews and lets you easily add one. There is a chrome plugin to make your browser experience more enjoyable. For developpers there is an api that allows you to create apps that interact with our servers.<br/><br/>
+					Webreview is totally free so give it a try!
+				</section>
 			</div>
 		</div>
 		<script src="scripts/removePluginLink.js"></script>
-		<script src="scripts/WebReviewPlugin.js"></script>
-		<script src="scripts/login.js"></script>
 	</body>
 </html>

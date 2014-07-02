@@ -2,6 +2,18 @@ function WebReviewPlugin (server) {
 	this.server = server;
 }
 
+WebReviewPlugin.prototype.moderateReview = function moderateReview (reviewId, key, value, callback) {
+	var request = new XMLHttpRequest();
+	request.addEventListener("error", function () {
+		callback({error: "Failed to moderate review, do you have an internet connection?"});
+	});
+	request.addEventListener("load", function () {
+		callback(JSON.parse(request.responseText));
+	}, false);
+	request.open("GET", this.server + "/moderatereview/" + reviewId + "/" + key + "/" + value);
+	request.send();
+};
+
 WebReviewPlugin.prototype.login = function (email, password, callback) {
 	var params = "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password);
 	var request = new XMLHttpRequest();
@@ -10,8 +22,8 @@ WebReviewPlugin.prototype.login = function (email, password, callback) {
 	});
 	request.addEventListener("load", function () {
 		var response = JSON.parse(request.responseText);
-		if (response.email) {
-			localStorage.email = response.email;
+		for (var k in response) {
+			localStorage[k] = response[k];
 		}
 		callback(request.responseText);
 	}, false);
@@ -100,6 +112,10 @@ WebReviewPlugin.prototype.getDomReview = function (jsonReview) {
 		review.appendChild(this.newDomMoreInfoButton(jsonReview.reviewId));
 	}
 	
+	if (localStorage.moderator) {
+		review.appendChild(this.newDomRemoveButton(jsonReview.reviewId));
+	}
+	
 	return review;
 };
 
@@ -119,4 +135,13 @@ WebReviewPlugin.prototype.newDomMoreInfoButton = function (id) {
 	return anchor;
 };
 
-var reviewPlugin = new WebReviewPlugin("http://reviews.squarific.com");
+WebReviewPlugin.prototype.newDomRemoveButton = function (id) {
+	var anchor = document.createElement("a");
+	anchor.href = "review.html?delete=" + id;
+	var button = anchor.appendChild(document.createElement("div"));
+	button.className = "moreinfobutton button removebutton";
+	button.innerText = "Make this review invisible";
+	return anchor;
+};
+
+var reviewPlugin = new WebReviewPlugin("http://127.0.0.1:8080");
